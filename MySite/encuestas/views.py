@@ -1,15 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Preguntas, Eleccion
-from django.template import loader
-def index(request):
-    ultima_pregunta_list = Preguntas.objects.order_by('-pub_date')[:5]
-    template = loader.get_template('encuestas/index.html')
-    contexto = {
-        'ultima_pregunta_list': ultima_pregunta_list,
-    }
-    #une las preguntas con una coma y un espacio
-    return HttpResponse(template.render(contexto, request))
+from  django.shortcuts import render
+from django.http import Http404
+def index(request,pregunta_id):
+    try:
+        pregunta = Preguntas.objects.get(id=pregunta_id) #obtiene la pregunta por su id
+    except Preguntas.DoesNotExist:
+        raise Http404("No hay preguntas disponibles.")
+    return render(request, 'encuestas/index.html', {"pregunta":pregunta}) #renderiza la plantilla index.html
 
 def detalle(request, pregunta_id):
     return HttpResponse("estas viendo la pregunta %s." %pregunta_id)
