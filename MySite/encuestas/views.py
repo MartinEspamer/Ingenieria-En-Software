@@ -4,9 +4,10 @@ from .models import Preguntas, Eleccion
 from django.template import loader
 def index(request):
     ultima_pregunta_list = Preguntas.objects.order_by('-pub_date')[:5]
-    salida = ', '.join([p.question for p in ultima_pregunta_list])
     template = loader.get_template('encuestas/index.html')
-    contexto = {'ultima_pregunta_list': ultima_pregunta_list}
+    contexto = {
+        'ultima_pregunta_list': ultima_pregunta_list,
+    }
     #une las preguntas con una coma y un espacio
     return HttpResponse(template.render(contexto, request))
 
