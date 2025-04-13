@@ -1,19 +1,26 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from .models import Preguntas, Eleccion
 from  django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-def index(request,pregunta_id):
-    pregunta = get_object_or_404(Preguntas, pk=pregunta_id) #obtiene la pregunta por su id
-    return render(request, 'encuestas/index.html', {"pregunta":pregunta}) #renderiza la plantilla index.html
+from django.views import generic
 
-def detalle(request, pregunta_id):
-    return HttpResponse("estas viendo la pregunta %s." %pregunta_id)
+class IndexView(generic.ListView):
+    template_name = "encuestas/index.html" #template a utilizar
+    context_object_name = "ultimas_preguntas_list" #nombre del contexto a utilizar
 
-def resultados(request, pregunta_id):
-    pregunta = get_object_or_404(Preguntas, pk=pregunta_id) #obtiene la pregunta por su id
-    return render(request, 'encuestas/resultados.html', {"pregunta":pregunta}) #renderiza la plantilla resultados.html
-    
+    def get_queryset(self): #metodo para obtener las preguntas
+        return Preguntas.objects.order_by("-fecha_publicacion") #obtiene todas las preguntas
+
+class DetalleView(generic.DetailView):
+    model = Preguntas #modelo a utilizar
+    template_name = "encuestas/detalles.html" #template a utilizar
+
+class ResultadosView(generic.DetailView):
+    model = Preguntas #modelo a utilizar
+    template_name = "encuestas/resultados.html" #template a utilizar
+
+
 def voto(request, pregunta_id):
     pregunta = get_object_or_404(Preguntas, pk=pregunta_id) #obtiene la pregunta por su id
     try:
