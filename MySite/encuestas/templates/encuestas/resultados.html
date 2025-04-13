@@ -1,0 +1,9 @@
+<h1> {{preguntas.texto_preguntas}} </h1>
+
+<ul>
+    {% for eleccion in preguntas.eleccion_set.all %}
+        <li>{{ eleccion.texto_elegido }} -- {{ eleccion.votos }} votos {{ eleccion.votos|pluralize }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'encuestas:detalle' preguntas.id %}">Volver a la pregunta</a>
