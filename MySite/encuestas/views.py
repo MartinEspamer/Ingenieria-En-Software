@@ -1,13 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Preguntas, Eleccion
-from  django.shortcuts import render
-from django.http import Http404
+from  django.shortcuts import render, get_object_or_404
 def index(request,pregunta_id):
-    try:
-        pregunta = Preguntas.objects.get(id=pregunta_id) #obtiene la pregunta por su id
-    except Preguntas.DoesNotExist:
-        raise Http404("No hay preguntas disponibles.")
+    pregunta = get_object_or_404(Preguntas, pk=pregunta_id) #obtiene la pregunta por su id
     return render(request, 'encuestas/index.html', {"pregunta":pregunta}) #renderiza la plantilla index.html
 
 def detalle(request, pregunta_id):
