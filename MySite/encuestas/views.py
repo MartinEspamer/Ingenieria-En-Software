@@ -14,24 +14,23 @@ class IndexView(generic.ListView):
 
 class DetalleView(generic.DetailView):
     model = Preguntas #modelo a utilizar
-    template_name = "encuestas/detalles.html" #template a utilizar
+    template_name = "encuestas/detalle.html" #template a utilizar
 
 class ResultadosView(generic.DetailView):
     model = Preguntas #modelo a utilizar
     template_name = "encuestas/resultados.html" #template a utilizar
 
 
-def voto(request, pregunta_id):
-    pregunta = get_object_or_404(Preguntas, pk=pregunta_id) #obtiene la pregunta por su id
+def voto(request, pk):
+    pregunta = get_object_or_404(Preguntas, pk=pk)
     try:
-        seleccion = pregunta.eleccion_set.get(pk=request.POST["eleccion"]) #obtiene la eleccion por su id
+        seleccion = pregunta.eleccion_set.get(pk=request.POST["eleccion"])
     except (KeyError, Eleccion.DoesNotExist):
-        return render(request, 'encuestas/index.html', {
-            'pregunta':pregunta,
-            'error_message':"No seleccionaste una opcion.",
+        return render(request, 'encuestas/detalles.html', {
+            'preguntas': pregunta,
+            'error_message': "No seleccionaste una opcion.",
         })
     else:
-        seleccion.votos += 1 #incrementa el voto
-        seleccion.save() #guarda el voto en la base de datos
-        return HttpResponseRedirect(reverse('encuestas:resultados', args=(pregunta.id,))) #redirecciona a la vista resultados
-
+        seleccion.votos += 1
+        seleccion.save()
+        return HttpResponseRedirect(reverse('encuestas:resultados', args=(pregunta.id,)))

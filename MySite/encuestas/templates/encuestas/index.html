@@ -1,7 +1,7 @@
-{% if ultima_pregunta_list %}
+{% if ultimas_preguntas_list %}
     <ul>
-        {% for pregunta in ultima_pregunta_list %}
-            <li><a href="{% url 'encuestas:detalle' pregunta.id %}">{{ pregunta.texto_preguntas }}</a></li>
+        {% for pregunta in ultimas_preguntas_list %}
+            <li><a href="{% url 'encuestas:detalles' pregunta.id %}">{{ pregunta.texto_preguntas }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
